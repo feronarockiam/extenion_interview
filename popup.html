@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Extension</title>
+    <script src="popup.js"></script>
+    <style>
+      body{
+        background-color: #000000;
+        color: #007acc;
+      }
+      .question {
+  background-color: #007acc;
+  color: #fcfcfc;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 10px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.startButton, .endButton, .finishButton {
+  background-color: #007acc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.startButton:hover, .endButton:hover, .finishButton:hover {
+  background-color: #005f8c;
+}
+    </style>
+  </head>
+  <body>
+    <h1>My Extension</h1>
+    <div class="question"></div>
+    <div class="duration"></div>
+    <button class="startButton" style="display: none;">Start</button>
+    <button class="endButton" style="display: none;">Next Question</button>
+    <button class="finishButton" style="display: none;">Finish</button>
+  </body>
+</html>

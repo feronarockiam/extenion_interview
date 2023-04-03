@@ -1,0 +1,14 @@
+{
+    "name": "my-extension",
+    "version": "1.0.0",
+    "description": "Description of my extension",
+    "main": "server.js",
+    "dependencies": {
+        "child_process": "^1.0.2",
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "mongodb": "^3.6.6",
+        "mongoose": "^7.0.3",
+        "nodemon": "^2.0.22"
+    }
+}
