@@ -24,31 +24,82 @@ app.get('/start', (req, res) => {
   res.send('Python script started!');
 });
 
-app.post('/timestamps', (req, res) => {
-  const start = req.body.start;
-  const end = req.body.end;
+client.connect(err => {
+  if (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error connecting to database' });
+    return;
+  }
+  const collection = client.db("interview").collection("timestamps");
+  
 
-  client.connect(err => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error connecting to database' });
-      return;
-    }
 
-    const collection = client.db("interview").collection("timestamps");
-    collection.insertOne({ start: start, end: end }, function(err, result) {
-      if (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Error inserting data into database' });
-        return;
+
+  app.post('/timestamps', (req, res) => {
+    const start = req.body.start;
+    const end = req.body.end;
+    collection.countDocuments(function (err, count) {
+      if (err) throw err;
+      console.log("Number of documents in collection: " + count);
+    
+      // If there are more than 3 documents, delete all of them
+      if (count > 2) {
+        collection.deleteMany({}, function (err, result) {
+          if (err) throw err;
+          console.log("Deleted documents");
+    
+    
+    
+          collection.insertOne({ start: start, end: end }, function (err, result) {
+            if (err) {
+              console.error(err);
+              res.status(500).json({ message: 'Error inserting data into database' });
+              return;
+            }
+    
+            console.log("1 document inserted");
+            res.json({ message: 'Timestamps inserted successfully' });
+            // Move this line to the callback function
+          });
+        });
+    
       }
-
-      console.log("1 document inserted");
-      res.json({ message: 'Timestamps inserted successfully' });
-       // Move this line to the callback function
+      else{
+        collection.insertOne({ start: start, end: end }, function (err, result) {
+          if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error inserting data into database' });
+            return;
+          }
+    
+          console.log("1 document inserted");
+          res.json({ message: 'Timestamps inserted successfully' });
+          // Move this line to the callback function
+        });
+      }
+    
     });
+
+
+    //collection = client.db("interview").collection("timestamps");
+
+    // collection.insertOne({ start: start, end: end }, function (err, result) {
+    //   if (err) {
+    //     console.error(err);
+    //     res.status(500).json({ message: 'Error inserting data into database' });
+    //     return;
+    //   }
+
+    //   console.log("1 document inserted");
+    //   res.json({ message: 'Timestamps inserted successfully' });
+    //   // Move this line to the callback function
+    // });
   });
 });
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

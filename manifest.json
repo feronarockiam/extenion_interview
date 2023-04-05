@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "My Extension",
+  "name": "Google Meet Extension",
   "version": "1.0",
   "description": "Description of my extension",
   "permissions": [
@@ -14,6 +14,9 @@
     }
   ],
   "browser_action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "gmeet16.png"
+    }
   }
 }

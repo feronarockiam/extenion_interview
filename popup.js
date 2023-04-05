@@ -10,6 +10,7 @@ window.addEventListener("load",()=>{
     chrome.runtime.sendMessage({command: "start"});
     //console.log('in start');
     startTime = new Date().getTime();
+    //console.log("Start time: " + formatTimestamp(startTime));
     document.getElementsByClassName("startButton")[0].style.display = "none";
     document.getElementsByClassName("endButton")[0].style.display = "block";
     displayQuestion();
@@ -20,11 +21,16 @@ window.addEventListener("load",()=>{
   }
   
   function endTimestamp() {
+    console.log(startTime);
     endTime = new Date().getTime();
-    const duration = endTime - startTime;
+    let duration = endTime - startTime;
     const formattedDuration = formatDuration(duration);
-    const starttime = formatTimestamp(startTime);
-    const endtime = formatTimestamp(endTime);
+    let starttime = formatTimestamp(startTime);
+    let endtime = formatTimestamp(endTime);
+    console.log("Start time: " + formatTimestamp(startTime));
+    console.log("End time: " + formatTimestamp(endTime));
+    console.log(`question ${currentQuestionIndex + 1} duration : ${formattedDuration} `);
+    
     fetch('http://localhost:3000/timestamps',{
       method: 'POST',
       headers: {
@@ -32,9 +38,7 @@ window.addEventListener("load",()=>{
       },
       body: JSON.stringify({ start : starttime, end : endtime})
     }).then(response => response.json()).then(data => console.log(data)).catch(err => console.log(err))
-    console.log("Start time: " + formatTimestamp(startTime));
-    console.log("End time: " + formatTimestamp(endTime));
-    console.log(`question ${currentQuestionIndex + 1} duration : ${formatDuration(duration)} `);
+    
     document.getElementsByClassName("endButton")[0].style.display = "block";
     document.getElementsByClassName("startButton")[0].style.display = "none";
     currentQuestionIndex++;
@@ -46,6 +50,7 @@ window.addEventListener("load",()=>{
       document.getElementsByClassName("finishButton")[0].style.display = "block";
       document.getElementsByClassName("finishButton")[0].addEventListener("click", finish);
     }
+    startTime = endTime;
   }
 
   function displayQuestion(){
