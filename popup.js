@@ -1,6 +1,6 @@
 let startTime = null;
 let endTime = null;
-let questions = ["what is machine learning?","what is data science?","what is data structures?"];
+let questions = ["what is machine learning?","what is data science?","what is data structures?","question 4"];
 let currentQuestionIndex = 0;
 let i=0;
 let count = 0;
@@ -39,11 +39,11 @@ window.addEventListener("load",()=>{
   
   function endTimestamp() {
 
-    chrome.runtime.sendMessage({command: "app"});
-    fetch('http://localhost:3000/app')
-    .then(response => response.text())
-    .then(message => console.log(message))
-    .catch(error => console.log(error));
+    // chrome.runtime.sendMessage({command: "app"});
+    // fetch('http://localhost:3000/app')
+    // .then(response => response.text())
+    // .then(message => console.log(message))
+    // .catch(error => console.log(error));
 
     if (count===1){
       speech('the second question is '+questions[1])

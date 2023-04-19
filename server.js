@@ -10,43 +10,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 app.use(express.json());
 app.use(cors());
-
 app.use(express.static('public'));
-app.get('/start', (req, res) => {
-  // Execute the Python script only when the "start" button is clicked
-  const pythonProcess = spawn('python', ['voicefrommeet.py']);
-  pythonProcess.stdout.on('data', (data) => {
-    console.log(data.toString());
-  });
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(data.toString());
-  });
-  res.send('Python script start started!');
-});
-
-app.get('/end', (req, res) => {
-  // Execute the Python script only when the "start" button is clicked
-  const pythonProcess = spawn('python', ['end.py']);
-  pythonProcess.stdout.on('data', (data) => {
-    console.log(data.toString());
-  });
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(data.toString());
-  });
-  res.send('Python script end started!');
-});
-
-app.get('/app', (req, res) => {
-  // Execute the Python script only when the "start" button is clicked
-  const pythonProcess = spawn('python', ['app.py']);
-  pythonProcess.stdout.on('data', (data) => {
-    console.log(data.toString());
-  });
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(data.toString());
-  });
-  res.send('Python script end started!');
-});
 
 client.connect(err => {
   if (err) {
@@ -54,11 +18,13 @@ client.connect(err => {
     res.status(500).json({ message: 'Error connecting to database' });
     return;
   }
-  const collection = client.db("interview").collection("timestamps");
+  else{
+    console.log('connected to db');
+
+    
+  }
   
-
-
-
+  const collection = client.db("interview").collection("timestamps");
   app.post('/timestamps', (req, res) => {
     const start = req.body.start;
     const end = req.body.end;
@@ -67,28 +33,28 @@ client.connect(err => {
       console.log("Number of documents in collection: " + count);
     
       // If there are more than 3 documents, delete all of them
-      if (count > 2) {
-        collection.deleteMany({}, function (err, result) {
-          if (err) throw err;
-          console.log("Deleted documents");
+      // if (count > 3) {
+      //   collection.deleteMany({}, function (err, result) {
+      //     if (err) throw err;
+      //     console.log("Deleted documents");
     
     
     
-          collection.insertOne({ start: start, end: end }, function (err, result) {
-            if (err) {
-              console.error(err);
-              res.status(500).json({ message: 'Error inserting data into database' });
-              return;
-            }
+      //     collection.insertOne({ start: start, end: end }, function (err, result) {
+      //       if (err) {
+      //         console.error(err);
+      //         res.status(500).json({ message: 'Error inserting data into database' });
+      //         return;
+      //       }
     
-            console.log("1 document inserted");
-            res.json({ message: 'Timestamps inserted successfully' });
-            // Move this line to the callback function
-          });
-        });
+      //       console.log("1 document inserted");
+      //       res.json({ message: 'Timestamps inserted successfully' });
+      //       // Move this line to the callback function
+      //     });
+      //   });
     
-      }
-      else{
+      // }
+      
         collection.insertOne({ start: start, end: end }, function (err, result) {
           if (err) {
             console.error(err);
@@ -100,7 +66,7 @@ client.connect(err => {
           res.json({ message: 'Timestamps inserted successfully' });
           // Move this line to the callback function
         });
-      }
+      
     
     });
 
@@ -119,7 +85,135 @@ client.connect(err => {
     //   // Move this line to the callback function
     // });
   });
+
+
+
+
+app.get('/start', (req, res) => {
+  // Execute the Python script only when the "start" button is clicked
+  const pythonProcess = spawn('python', ['voicefrommeet.py']);
+  pythonProcess.stdout.on('data', (data) => {
+    console.log(data.toString());
+  });
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(data.toString());
+  });
+  res.send('Python script start started!');
+
+  collection.deleteMany({}, function (err, result) {
+    if (err) throw err;
+    console.log("Deleted documents");
+  })
+
+  
 });
+
+app.get('/end', (req, res) => {
+  // Execute the Python script only when the "start" button is clicked
+  const pythonProcess = spawn('python', ['end.py']);
+  pythonProcess.stdout.on('data', (data) => {
+    console.log(data.toString());
+  });
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(data.toString());
+  });
+  res.send('Python script end started!');
+});
+
+});
+
+
+
+
+  
+
+// app.get('/app', (req, res) => {
+//   // Execute the Python script only when the "start" button is clicked
+//   const pythonProcess = spawn('python', ['app.py']);
+//   pythonProcess.stdout.on('data', (data) => {
+//     console.log(data.toString());
+//   });
+//   pythonProcess.stderr.on('data', (data) => {
+//     console.error(data.toString());
+//   });
+//   res.send('Python script end started!');
+// });
+
+// client.connect(err => {
+//   if (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Error connecting to database' });
+//     return;
+//   }
+//   else{
+//     console.log('connected to db');
+//   }
+//   const collection = client.db("interview").collection("timestamps");
+  
+
+
+
+//   app.post('/timestamps', (req, res) => {
+//     const start = req.body.start;
+//     const end = req.body.end;
+//     collection.countDocuments(function (err, count) {
+//       if (err) throw err;
+//       console.log("Number of documents in collection: " + count);
+    
+//       // If there are more than 3 documents, delete all of them
+//       if (count > 3) {
+//         collection.deleteMany({}, function (err, result) {
+//           if (err) throw err;
+//           console.log("Deleted documents");
+    
+    
+    
+//           collection.insertOne({ start: start, end: end }, function (err, result) {
+//             if (err) {
+//               console.error(err);
+//               res.status(500).json({ message: 'Error inserting data into database' });
+//               return;
+//             }
+    
+//             console.log("1 document inserted");
+//             res.json({ message: 'Timestamps inserted successfully' });
+//             // Move this line to the callback function
+//           });
+//         });
+    
+//       }
+//       else{
+//         collection.insertOne({ start: start, end: end }, function (err, result) {
+//           if (err) {
+//             console.error(err);
+//             res.status(500).json({ message: 'Error inserting data into database' });
+//             return;
+//           }
+    
+//           console.log("1 document inserted");
+//           res.json({ message: 'Timestamps inserted successfully' });
+//           // Move this line to the callback function
+//         });
+//       }
+    
+//     });
+
+
+//     //collection = client.db("interview").collection("timestamps");
+
+//     // collection.insertOne({ start: start, end: end }, function (err, result) {
+//     //   if (err) {
+//     //     console.error(err);
+//     //     res.status(500).json({ message: 'Error inserting data into database' });
+//     //     return;
+//     //   }
+
+//     //   console.log("1 document inserted");
+//     //   res.json({ message: 'Timestamps inserted successfully' });
+//     //   // Move this line to the callback function
+//     // });
+//   });
+// });
 
 
 
