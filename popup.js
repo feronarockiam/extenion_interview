@@ -1,12 +1,28 @@
 let startTime = null;
 let endTime = null;
-const questions = ["what is machine learning","what is data science","what is data structures"];
+let questions = ["what is machine learning?","what is data science?","what is data structures?"];
 let currentQuestionIndex = 0;
-
+let i=0;
+let count = 0;
 window.addEventListener("load",()=>{
+  console.log(questions.length);
   // console.log(document.getElementsByClassName("startButton").addEventListener);
 
+  function speech(text){
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-us'
+    speechSynthesis.speak(utterance);
+  }
+
   function startTimestamp() {
+    if ('speechSynthesis' in window){
+      speech('Welcome to the virtual interview i am Andrew, your AI interviewer, all the best for your interview and now shall we start the interview. The first question is ' + questions[i]);
+    }
+    else{
+      console.log('chrome has no speech to text');
+    }
+    
+
     chrome.runtime.sendMessage({command: "start"});
     //console.log('in start');
     startTime = new Date().getTime();
@@ -17,10 +33,29 @@ window.addEventListener("load",()=>{
     fetch('http://localhost:3000/start')
     .then(response => response.text())
     .then(message => console.log(message))
-    .catch(error => console.error(error));
+    .catch(error => console.log(error));
+    count = 1
   }
   
   function endTimestamp() {
+
+    chrome.runtime.sendMessage({command: "app"});
+    fetch('http://localhost:3000/app')
+    .then(response => response.text())
+    .then(message => console.log(message))
+    .catch(error => console.log(error));
+
+    if (count===1){
+      speech('the second question is '+questions[1])
+    }
+    else if(count === 2){
+      speech('here comes the third question'+questions[2])
+    }
+    else if(count === 3){
+      speech('the fourth question is '+questions[3]+'Thats it for this session Thanks for attending the interview you can see the percentage of you question accuracy in the extension')
+    }
+    
+
     console.log(startTime);
     endTime = new Date().getTime();
     let duration = endTime - startTime;
@@ -41,20 +76,27 @@ window.addEventListener("load",()=>{
     
     document.getElementsByClassName("endButton")[0].style.display = "block";
     document.getElementsByClassName("startButton")[0].style.display = "none";
-    currentQuestionIndex++;
-    if(currentQuestionIndex < questions.length){
+    
+    if(count < 3){
       displayQuestion();
+    }
+    else if(count === 3){
+      displayQuestion();
+      document.getElementsByClassName("endButton")[0].style.display = "none";
+      document.getElementsByClassName("finishButton")[0].style.display = "block";
+      document.getElementsByClassName("finishButton")[0].addEventListener("click", finish);
     }
     else{
       document.getElementsByClassName("endButton")[0].style.display = "none";
       document.getElementsByClassName("finishButton")[0].style.display = "block";
       document.getElementsByClassName("finishButton")[0].addEventListener("click", finish);
     }
+    count++
     startTime = endTime;
   }
 
   function displayQuestion(){
-    document.getElementsByClassName("question")[0].innerHTML = questions[currentQuestionIndex];
+    document.getElementsByClassName("question")[0].innerHTML = questions[count];
     document.getElementsByClassName("duration")[0].innerHTML = "";
   }
 
@@ -100,6 +142,11 @@ window.addEventListener("load",()=>{
   }
 
   function finish(){
+    chrome.runtime.sendMessage({command: "end"});
+    fetch('http://localhost:3000/end')
+    .then(response => response.text())
+    .then(message => console.log(message))
+    .catch(error => console.log(error));
     displayMessage("Questions Completed")
     document.getElementsByClassName("finishButton")[0].style.display = "none";
   }

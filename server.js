@@ -21,7 +21,31 @@ app.get('/start', (req, res) => {
   pythonProcess.stderr.on('data', (data) => {
     console.error(data.toString());
   });
-  res.send('Python script started!');
+  res.send('Python script start started!');
+});
+
+app.get('/end', (req, res) => {
+  // Execute the Python script only when the "start" button is clicked
+  const pythonProcess = spawn('python', ['end.py']);
+  pythonProcess.stdout.on('data', (data) => {
+    console.log(data.toString());
+  });
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(data.toString());
+  });
+  res.send('Python script end started!');
+});
+
+app.get('/app', (req, res) => {
+  // Execute the Python script only when the "start" button is clicked
+  const pythonProcess = spawn('python', ['app.py']);
+  pythonProcess.stdout.on('data', (data) => {
+    console.log(data.toString());
+  });
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(data.toString());
+  });
+  res.send('Python script end started!');
 });
 
 client.connect(err => {

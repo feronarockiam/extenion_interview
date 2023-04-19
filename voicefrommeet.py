@@ -1,15 +1,14 @@
 import pyaudio
 import wave
-import keyboard
-from pydub import AudioSegment
 import os
+
 # Set the recording parameters
 chunk = 1024
 sample_format = pyaudio.paInt16
 channels = 2
 fs = 44100
 OUTPUT_FILE_NAME = "out.wav"    # file name.
-OUTPUT_FILE_NAME_MP3 = "out.mp3"    # mp3 file name.
+
 # Create an instance of PyAudio
 p = pyaudio.PyAudio()
 
@@ -23,11 +22,18 @@ stream = p.open(format=sample_format,
 # Create a list to store the recorded data
 frames = []
 
-# Record the audio until the specified key is pressed
-while not keyboard.is_pressed('q'):
+# Record the audio
+while True:
     data = stream.read(chunk)
     frames.append(data)
 
+    # Check if stop recording file exists
+    
+    if os.path.isfile('stop_recording'):
+        print("inside it")
+        os.remove('stop_recording')
+        break
+print("outside")
 # Stop and close the microphone stream
 stream.stop_stream()
 stream.close()
@@ -42,5 +48,37 @@ wf.setsampwidth(p.get_sample_size(sample_format))
 wf.setframerate(fs)
 wf.writeframes(b"".join(frames))
 wf.close()
-AudioSegment.from_wav(OUTPUT_FILE_NAME).export(OUTPUT_FILE_NAME_MP3, format="mp3")
-os.remove("out.wav")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
