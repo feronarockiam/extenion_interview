@@ -149,8 +149,18 @@ window.addEventListener("load",()=>{
     .catch(error => console.log(error));
     displayMessage("Questions Completed")
     document.getElementsByClassName("finishButton")[0].style.display = "none";
+    document.getElementsByClassName("results")[0].style.display = "block";
+    document.getElementsByClassName("results")[0].addEventListener("click", results);
   }
   
+  function results(){
+    chrome.runtime.sendMessage({command: "app"});
+    fetch('http://localhost:3000/app')
+    .then(response => response.text())
+    .then(message => console.log(message))
+    .catch(error => console.log(error)); 
+  }
+
   chrome.tabs.query({active : true, currentWindow: true}, function(tabs){
     if(tabs[0].url.includes("meet.google.com")){
       displayMessage("Google Meet Extension"); 

@@ -21,7 +21,7 @@ client.connect(err => {
   else{
     console.log('connected to db');
 
-    
+
   }
   
   const collection = client.db("interview").collection("timestamps");
@@ -120,6 +120,18 @@ app.get('/end', (req, res) => {
   res.send('Python script end started!');
 });
 
+app.get('/app', (req, res) => {
+  // Execute the Python script only when the "start" button is clicked
+  const pythonProcess = spawn('python', ['app.py']);
+  pythonProcess.stdout.on('data', (data) => {
+    console.log(data.toString());
+  });
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(data.toString());
+  });
+  res.send('Python script end started!');
+});
+
 });
 
 
@@ -127,17 +139,7 @@ app.get('/end', (req, res) => {
 
   
 
-// app.get('/app', (req, res) => {
-//   // Execute the Python script only when the "start" button is clicked
-//   const pythonProcess = spawn('python', ['app.py']);
-//   pythonProcess.stdout.on('data', (data) => {
-//     console.log(data.toString());
-//   });
-//   pythonProcess.stderr.on('data', (data) => {
-//     console.error(data.toString());
-//   });
-//   res.send('Python script end started!');
-// });
+
 
 // client.connect(err => {
 //   if (err) {
