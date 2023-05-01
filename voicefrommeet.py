@@ -33,7 +33,7 @@ while True:
         print("inside it")
         os.remove('stop_recording')
         break
-print("outside")
+print("end of rec")
 # Stop and close the microphone stream
 stream.stop_stream()
 stream.close()
