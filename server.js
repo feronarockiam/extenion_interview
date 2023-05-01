@@ -24,8 +24,8 @@ client.connect(err => {
   
   const collection = client.db("interview").collection("timestamps");
   app.post('/timestamps', (req, res) => {
-    const start = req.body.start;
-    const end = req.body.end;
+    const start = req.body.start
+    const end = req.body.end
     collection.countDocuments(function (err, count) {
       if (err) throw err;
       console.log("Number of documents in collection: " + count);
